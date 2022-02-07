@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 
 [assembly: FunctionsStartup(typeof(cicdApp.PersonApi.Startup))]
-namespace cicdApp.PersonApi
+namespace cicdApp.PersonApi 
 {
     public class Startup : FunctionsStartup
     {
