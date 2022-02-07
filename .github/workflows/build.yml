@@ -25,4 +25,4 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish cicd/src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o website
+      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o website
