@@ -25,10 +25,10 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o artifacts
+      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o website
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
-        name: artifacts
-        path: cicd/artifacts/**
+        name: website
+        path: cicd/website/**
         if-no-files-found: error
