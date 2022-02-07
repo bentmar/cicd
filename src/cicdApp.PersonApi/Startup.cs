@@ -12,7 +12,7 @@ using System;
 [assembly: FunctionsStartup(typeof(cicdApp.PersonApi.Startup))]
 namespace cicdApp.PersonApi 
 {
-    public class Startup : FunctionsStartup
+    public class Startup : FunctionsStartup 
     {
         private IConfigurationRoot config;
         public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder configBuilder)
