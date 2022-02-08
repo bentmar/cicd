@@ -49,8 +49,8 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.0.8
       with:
-        name: website
-        path: website
+        name: artifacts
+        path: artifacts
 
     - name: Login via Azure CLI
       uses: azure/login@v1
@@ -62,8 +62,7 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.app-name }}
-        slot-name: staging
-        package: website
+        package: artifacts
 
     - name: Update config
       uses: Azure/appservice-settings@v1
