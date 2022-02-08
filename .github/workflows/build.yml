@@ -6,6 +6,9 @@ on:
   #  paths:
   #  - src/**
   #  - tests/**
+env:
+  app-name: "cicd-filechecker-fa-qa"
+  rg-name: "cicd-qa"
 
 jobs:
   build:
@@ -32,3 +35,49 @@ jobs:
         name: artifacts
         path: /home/runner/work/cicd/cicd/artifacts/**
         if-no-files-found: error
+
+
+  deploy_qa:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: QA
+      url: ${{ steps.deploywebapp.outputs.webapp-url }}
+
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2.0.8
+      with:
+        name: website
+        path: website
+
+    - name: Login via Azure CLI
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy web app
+      id: deploywebapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.app-name }}
+        slot-name: staging
+        package: website
+
+    - name: Update config
+      uses: Azure/appservice-settings@v1
+      with:
+       app-name: ${{ env.app-name }}
+       slot-name: staging
+       app-settings-json: |
+         [
+             {
+                 "name": "UI:Index:Header",
+                 "value": "${{ secrets.INDEX_HEADER }}",
+                 "slotSetting": true
+             }
+         ]
+
+    - name: az cli logout
+      run: az logout
