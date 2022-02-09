@@ -61,8 +61,7 @@ jobs:
       id: deploywebapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ env.app-name }}
-        package: artifacts
+        app-name: ${{ env.app-name }}        
 
     - name: az cli logout
       run: az logout
