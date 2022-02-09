@@ -33,7 +33,7 @@ jobs:
       uses: actions/upload-artifact@v2.3.1
       with:
         name: PersonApi
-        path: /home/runner/work/cicd/cicd/artifacts/**
+        path: /home/runner/work/cicd/cicd/personApi/
         if-no-files-found: error
 
 
