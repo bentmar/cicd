@@ -28,12 +28,12 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o ./personApi
+      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o ./personapiartifact
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
         name: PersonApi
-        path: /home/runner/work/cicd/cicd/personApi/
+        path: /home/runner/work/cicd/cicd/personapiartifact/
         if-no-files-found: error
 
 
@@ -49,8 +49,8 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.0.8
       with:
-        name: artifacts
-        path: artifacts
+        name: PersonApi
+        path: /home/runner/work/cicd/cicd/personapiartifact/
 
     - name: Login via Azure CLI
       uses: azure/login@v1
