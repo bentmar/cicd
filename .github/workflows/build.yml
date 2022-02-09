@@ -50,7 +50,6 @@ jobs:
       uses: actions/download-artifact@v2.0.8
       with:
         name: PersonApi
-        path: /home/runner/work/cicd/cicd/personapiartifact/
 
     - name: Login via Azure CLI
       uses: azure/login@v1
