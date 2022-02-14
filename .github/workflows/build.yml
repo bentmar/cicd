@@ -7,9 +7,11 @@ on:
   #  - src/**
   #  - tests/**
 env:
-  app-name: "cicd-filechecker-fa-qa"
-  rg-name: "cicd-qa"
-  OUTPUT_PATH: ${{ github.workspace }}/.output
+  AZURE_FUNCTIONAPP_NAME: cicd-filechecker-fa-qa
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: src\cicdApp.PersonApi/publish
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 6.0.x
+  WORKING_DIRECTORY: src\cicdApp.PersonApi
 
 jobs:
   build:
@@ -23,18 +25,18 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release --output ${{ env.OUTPUT_PATH }}
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
         name: PersonApi
-        path: ${{ env.OUTPUT_PATH }}
+        path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
         if-no-files-found: error
 
   deploy_qa:
@@ -49,8 +51,7 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.0.8
       with:
-        name: PersonApi
-        path: ${{ env.OUTPUT_PATH }}
+        name: PersonApi       
 
     - name: Login via Azure CLI
       uses: azure/login@v1
@@ -62,7 +63,7 @@ jobs:
       uses: Azure/functions-action@v1.4.4
       with:
         app-name: ${{ env.app-name }}
-        package: ${{ env.OUTPUT_PATH }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
     - name: az cli logout
       run: az logout
