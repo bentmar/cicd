@@ -13,7 +13,7 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -28,21 +28,20 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o ./personapiartifact
+      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
         name: PersonApi
-        path: /home/runner/work/cicd/cicd/personapiartifact/
+        path: ${{env.DOTNET_ROOT}}/myapp
         if-no-files-found: error
-
 
   deploy_qa:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     environment:
-      name: QA
+      name: 'QA'
       url: ${{ steps.deploywebapp.outputs.webapp-url }}
 
     steps:
@@ -60,7 +59,7 @@ jobs:
       id: deploywebapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: ${{ env.app-name }}        
+        app-name: ${{ env.app-name }}     
 
     - name: az cli logout
       run: az logout
