@@ -9,6 +9,7 @@ on:
 env:
   app-name: "cicd-filechecker-fa-qa"
   rg-name: "cicd-qa"
+  OUTPUT_PATH: ${{ github.workspace }}/.output
 
 jobs:
   build:
@@ -28,12 +29,12 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish src/cicdApp.PersonApi/cicdApp.PersonApi.csproj -c Release --output ${{ env.OUTPUT_PATH }}
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
         name: PersonApi
-        path: ${{env.DOTNET_ROOT}}/myapp
+        path: ${{ env.OUTPUT_PATH }}
         if-no-files-found: error
 
   deploy_qa:
@@ -41,7 +42,7 @@ jobs:
     runs-on: windows-latest
 
     environment:
-      name: 'QA'
+      name: QA
       url: ${{ steps.deploywebapp.outputs.webapp-url }}
 
     steps:
@@ -49,6 +50,7 @@ jobs:
       uses: actions/download-artifact@v2.0.8
       with:
         name: PersonApi
+        path: ${{ env.OUTPUT_PATH }}
 
     - name: Login via Azure CLI
       uses: azure/login@v1
@@ -59,7 +61,8 @@ jobs:
       id: deploywebapp
       uses: Azure/functions-action@v1.4.4
       with:
-        app-name: ${{ env.app-name }}     
+        app-name: ${{ env.app-name }}
+        package: ${{ env.OUTPUT_PATH }}
 
     - name: az cli logout
       run: az logout
