@@ -52,6 +52,7 @@ jobs:
       uses: actions/download-artifact@v2.0.8
       with:
         name: PersonApi2
+        path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
     - name: Login via Azure CLI
       uses: azure/login@v1
