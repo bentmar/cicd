@@ -7,6 +7,7 @@ on:
   #  - src/**
   #  - tests/**
 env:
+  OUTPUT_PATH: ${{ github.workspace }}/.output
   AZURE_FUNCTIONAPP_NAME: cicd-filechecker-fa-qa
   AZURE_FUNCTIONAPP_PACKAGE_PATH: src\cicdApp.PersonApi/publish
   CONFIGURATION: Release
@@ -31,12 +32,12 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.OUTPUT_PATH }}
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
         name: PersonApi2
-        path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+        path: ${{ env.OUTPUT_PATH }}
         if-no-files-found: error
 
   deploy_qa:
@@ -49,10 +50,10 @@ jobs:
 
     steps:
     - name: Download a Build Artifact
-      uses: actions/download-artifact@v2.0.8
+      uses: actions/download-artifact@v2.1.0
       with:
         name: PersonApi2
-        path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+        path: ${{ env.OUTPUT_PATH }}
 
     - name: Login via Azure CLI
       uses: azure/login@v1
@@ -61,10 +62,10 @@ jobs:
 
     - name: Deploy Azure Functions
       id: deploywebapp
-      uses: Azure/functions-action@v1.4.4
+      uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-
+        package: ${{ env.OUTPUT_PATH }}
+        
     - name: az cli logout
       run: az logout
