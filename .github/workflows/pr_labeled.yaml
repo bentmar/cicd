@@ -14,7 +14,7 @@ env:
   WORKING_DIRECTORY: src\cicdApp.PersonApi
 
 jobs:
-  build:
+  Pr_Validation:
     if: ${{ github.event.label.name == 'Testing' }}
     runs-on: ubuntu-latest
 
