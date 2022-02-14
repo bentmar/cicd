@@ -3,7 +3,7 @@ name: Build PersonApi
 on:
   push:
     branches: [ main ]
-  #  paths:
+  #  paths: 
   #  - src/**
   #  - tests/**
 env:
