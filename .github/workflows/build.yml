@@ -25,9 +25,9 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      run: dotnet restore
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
@@ -35,7 +35,7 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.3.1
       with:
-        name: PersonApi
+        name: PersonApi2
         path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
         if-no-files-found: error
 
@@ -51,7 +51,7 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2.0.8
       with:
-        name: PersonApi       
+        name: PersonApi2
 
     - name: Login via Azure CLI
       uses: azure/login@v1
@@ -62,7 +62,7 @@ jobs:
       id: deploywebapp
       uses: Azure/functions-action@v1.4.4
       with:
-        app-name: ${{ env.app-name }}
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
     - name: az cli logout
