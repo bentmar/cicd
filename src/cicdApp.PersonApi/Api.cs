@@ -14,7 +14,7 @@ namespace cicdApp.PersonApi
     {
         private readonly IPersonService personService;
          
-        public Api(IPersonService personService) //he j
+        public Api(IPersonService personService)
         {
             this.personService = personService;
         }
