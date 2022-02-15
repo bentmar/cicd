@@ -4,7 +4,6 @@ on:
   pull_request:
     types: [ labeled ]
 
-
 env:
   OUTPUT_PATH: ${{ github.workspace }}/.output
   AZURE_FUNCTIONAPP_NAME: cicd-filechecker-fa-prod
@@ -14,7 +13,7 @@ env:
   WORKING_DIRECTORY: src\cicdApp.PersonApi
 
 jobs:
-  Pr_Validation:
+  pr_validation:
     if: ${{ github.event.label.name == 'Testing' }}
     runs-on: ubuntu-latest
 
@@ -40,7 +39,7 @@ jobs:
         if-no-files-found: error
 
   deploy_qa:
-    needs: build
+    needs: pr_validation
     runs-on: windows-latest
 
     environment:
