@@ -3,8 +3,6 @@ name: PR Validation
 on:
   pull_request:
     types: [ labeled ]
-    branches: [ main ]
-
 
 env:
   OUTPUT_PATH: ${{ github.workspace }}/.output
